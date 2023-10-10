@@ -82,7 +82,7 @@ try:
     def ASKThread():
         global RAD
         while True:
-            data, address = rsk.recvfrom(65500)
+            data, address = ask.recvfrom(65500)
             msgs = core.jsonBytesToDist(data)
             if msgs == {}: continue
             if "opt" not in msgs.keys() or "arg" not in msgs.keys(): continue
