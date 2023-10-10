@@ -1,0 +1,5 @@
+venv/
+debug/
+.idea/
+
+config.json
