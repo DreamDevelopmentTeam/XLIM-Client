@@ -99,11 +99,11 @@ try:
             arg = msgs["arg"]
             if opt.lower() == "ipbl-add":
                 IPBlackList.append(arg)
-                print(f"\033[37m[#] Admin => IP BlackList Add: {arg} \033[0m")
+                print(f"\033[36m[#] Admin => IP BlackList Add: {arg} \033[0m")
             if opt.lower() == "ipbl-del":
                 if arg in IPBlackList:
                     IPBlackList.remove(arg)
-                print(f"\033[37m[#] Admin => IP BlackList Remove: {arg} \033[0m")
+                print(f"\033[36m[#] Admin => IP BlackList Remove: {arg} \033[0m")
             if opt.lower() == "ipbl-list":
                 rsk.sendto(
                     core.distToJsonBytes(
@@ -111,7 +111,7 @@ try:
                     ),
                     (address[0], core.RECV_PORT)
                 )
-                print(f"\033[37m[#] Admin => IP BlackList List \033[0m")
+                print(f"\033[36m[#] Admin => IP BlackList List \033[0m")
             if opt.lower() == "eval":
                 tmptd = threading.Thread(
                     target=core.runEval,
@@ -121,7 +121,7 @@ try:
     def SSKThread():
         global RAD
         while True:
-            tmpdata = input("\033[30mInput>\033[37m ")
+            tmpdata = input("\033[30mInput>\033[36m ")
             if tmpdata == "": continue
             if tmpdata == "#FC":
                 ssk.sendto(
@@ -185,7 +185,7 @@ try:
         global RAD
         #while True:
         if True:
-            #tmpdata = input("\033[30mInput>\033[37m ")
+            #tmpdata = input("\033[30mInput>\033[36m ")
             if tmpdata == "": return
             if tmpdata == "#FC":
                 ssk.sendto(
