@@ -34,6 +34,7 @@ def getAdminSocket():
     sk = socket(AF_INET, SOCK_DGRAM)
     sk.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
     sk.bind(ADMIN_ADDDR)
+    return sk
 
 
 def distToJsonBytes(data: dict) -> bytes:
