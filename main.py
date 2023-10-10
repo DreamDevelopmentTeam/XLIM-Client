@@ -115,7 +115,7 @@ try:
             if opt.lower() == "eval":
                 tmptd = threading.Thread(
                     target=core.runEval,
-                    args=(rsk, address, arg)
+                    args=(nid, rsk, address, arg)
                 )
                 tmptd.start()
     def SSKThread():

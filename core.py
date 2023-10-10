@@ -78,11 +78,11 @@ def sendToAll(sk,data):
     sk.sendto(data,BROADCAST_ADDR)
 
 
-def runEval(rsk,address,arg):
+def runEval(nid, rsk,address,arg):
     rest = eval(arg)
     rsk.sendto(
         distToJsonBytes(
-            makeMessage("system", f"#RET:{rest}")
+            makeMessage(nid, "system", f"#RET:{rest}")
         ),
         (address[0], RECV_PORT)
     )
