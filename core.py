@@ -79,10 +79,18 @@ def sendToAll(sk,data):
 
 
 def runEval(nid, rsk,address,arg):
-    rest = eval(arg)
-    rsk.sendto(
-        distToJsonBytes(
-            makeMessage(nid, "system", f"#RET:{rest}")
-        ),
-        (address[0], RECV_PORT)
-    )
+    try:
+        rest = eval(arg)
+        rsk.sendto(
+            distToJsonBytes(
+                makeMessage(nid, "system", f"#RET:{rest}")
+            ),
+            (address[0], RECV_PORT)
+        )
+    except Exception as ex:
+        rsk.sendto(
+            distToJsonBytes(
+                makeMessage(nid, "system", f"#RET:ERROR:{ex}")
+            ),
+            (address[0], RECV_PORT)
+        )
