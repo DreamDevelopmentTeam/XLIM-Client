@@ -60,7 +60,10 @@ try:
             data, address =  rsk.recvfrom(65500)
             msgs = core.jsonBytesToDist(data)
             if msgs == {}: continue
-            if "un" not in msgs.keys() or "msg" not in msgs.keys() or "time" not in msgs.keys(): continue
+            if address[0] in IPBlackList: continue
+            if "nid" not in msgs.keys() or "un" not in msgs.keys() or "msg" not in msgs.keys() or "time" not in msgs.keys(): continue
+            nids = msgs["nid"]
+            if nids != nid: continue
             un = msgs["un"]
             msg = msgs["msg"]
             tn = msgs["time"]
@@ -68,7 +71,7 @@ try:
                 if msg == "#FC":
                     rsk.sendto(
                         core.distToJsonBytes(
-                            core.makeMessage("system", f"#RET:{username}")
+                            core.makeMessage(nid, "system", f"#RET:{username}")
                         ),
                         (address[0], core.RECV_PORT)
                     )
@@ -76,16 +79,22 @@ try:
                 elif msg == "#RET":
                     print(f"\033[35m[{address[0]}]\033[34m({tn}) \033[0m> {msg}")
                     continue
+                elif msg.startswith("#RET:"):
+                    print(f"\033[35m[{address[0]}]\033[34m({tn}) \033[0m> {msg}")
+                    continue
                 else:
                     pass
-            print(f"\033[35m[{address[0]}]\033[34m({tn}) \033[32m{un} \033[0m> {msg}")
+            print(f"\033[35m[{address[0]}]\033[34m({tn}) \033[32m{nid} @ {un} \033[0m> {msg}")
     def ASKThread():
         global RAD
         while True:
             data, address = ask.recvfrom(65500)
             msgs = core.jsonBytesToDist(data)
             if msgs == {}: continue
-            if "opt" not in msgs.keys() or "arg" not in msgs.keys(): continue
+            if address[0] in IPBlackList: continue
+            if "nid" not in msgs.keys() or "opt" not in msgs.keys() or "arg" not in msgs.keys(): continue
+            nids = msgs["nid"]
+            if nids != nid: continue
             opt = msgs["opt"]
             arg = msgs["arg"]
             if opt.lower() == "ipbl-add":
@@ -98,7 +107,7 @@ try:
             if opt.lower() == "ipbl-list":
                 rsk.sendto(
                     core.distToJsonBytes(
-                        core.makeMessage("system", f"#RET:{IPBlackList}")
+                        core.makeMessage(nid, "system", f"#RET:{IPBlackList}")
                     ),
                     (address[0], core.RECV_PORT)
                 )
@@ -117,7 +126,7 @@ try:
             if tmpdata == "#FC":
                 ssk.sendto(
                     core.distToJsonBytes(
-                        core.makeMessage("system", "#FC")
+                        core.makeMessage(nid, "system", "#FC")
                     ),
                     core.BROADCAST_ADDR
                 )
@@ -134,7 +143,7 @@ try:
                         arg = spt[2]
                         ssk.sendto(
                             core.distToJsonBytes(
-                                core.makeAdminMessage(opt, arg)
+                                core.makeAdminMessage(nid, opt, arg)
                             ),
                             RAD
                         )
@@ -151,7 +160,7 @@ try:
                     try:
                         rsk.sendto(
                             core.distToJsonBytes(
-                                core.makeMessage("system", f"#SWCO:{addr}")
+                                core.makeMessage(nid, "system", f"#SWCO:{addr}")
                             ),
                             (addr, core.RECV_PORT)
                         )
@@ -167,7 +176,7 @@ try:
                     pass
             ssk.sendto(
                 core.distToJsonBytes(
-                    core.makeMessage(username, tmpdata)
+                    core.makeMessage(nid, username, tmpdata)
                 ),
                 RAD
             )
@@ -181,7 +190,7 @@ try:
             if tmpdata == "#FC":
                 ssk.sendto(
                     core.distToJsonBytes(
-                        core.makeMessage("system", "#FC")
+                        core.makeMessage(nid, "system", "#FC")
                     ),
                     core.BROADCAST_ADDR
                 )
@@ -200,9 +209,9 @@ try:
                         arg = spt[2]
                         ssk.sendto(
                             core.distToJsonBytes(
-                                core.makeAdminMessage(opt, arg)
+                                core.makeAdminMessage(nid, opt, arg)
                             ),
-                            RAD
+                            (RAD[0], core.ADMIN_PORT)
                         )
                         print("\033[33m[#] Send admin message successful! \033[0m")
                         #continue
@@ -218,7 +227,7 @@ try:
                     try:
                         rsk.sendto(
                             core.distToJsonBytes(
-                                core.makeMessage("system", f"#SWCO:{addr}")
+                                core.makeMessage(nid, "system", f"#SWCO:{addr}")
                             ),
                             (addr, core.RECV_PORT)
                         )
@@ -236,7 +245,7 @@ try:
                     pass
             ssk.sendto(
                 core.distToJsonBytes(
-                    core.makeMessage(username, tmpdata)
+                    core.makeMessage(nid, username, tmpdata)
                 ),
                 RAD
             )

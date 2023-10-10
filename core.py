@@ -51,22 +51,25 @@ def jsonBytesToDist(data: bytes) -> dict:
         return {}
 
 
-def makeMessage(username:str,  msg:str) -> dict:
+def makeMessage(nid:int, username:str,  msg:str) -> dict:
     return {
+        'nid': nid,
         'un': username,
         'msg': msg,
         #'time': time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         'time': time.strftime("%H:%M:%S", time.localtime())
     }
 
-def makeAdminMessage(opt:str, arg):
+def makeAdminMessage(nid:int, opt:str, arg):
     return  {
+        'nid': nid,
         'opt': opt,
         'arg': arg,
     }
 
-def makeSystemMessage(opt:str, arg):
+def makeSystemMessage(nid:int, opt:str, arg):
     return {
+        'nid': nid,
         'opt': opt,
         'arg': arg,
     }
